@@ -16,8 +16,8 @@
                     <input type="text" [(ngModel)]="nomFilter" placeholder="Filtrer par nom">
                 </th>
                 <th>
-                    Prénom<br>
-                    <input type="text" [(ngModel)]="prenomFilter" placeholder="Filtrer par prénom">
+                    Email<br>
+                    <input type="text" [(ngModel)]="my_emailFilter" placeholder="Filtrer par email">
                 </th>
                 <th>
                     Âge<br>
@@ -27,15 +27,48 @@
                     Date de naissance<br>
                     <input type="text" [(ngModel)]="dateNaissFilter" placeholder="Filtrer par date">
                 </th>
+                <th>
+                    Profile<br>
+                    <input type="text" [(ngModel)]="profileFilter" placeholder="Filtrer par profile">
+                </th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let user of filteredUsers">
+            <tr *ngFor="let user of filteredUsers; let i = index">
                 <td>{{ user.nom }}</td>
-                <td>{{ user.prenom }}</td>
+                <td>{{ user.my_email }}</td>
                 <td>{{ user.age }}</td>
                 <td>{{ user.date_naiss }}</td>
+                <td>{{ user.profile }}</td>
+                <td>
+                    <button (click)="editUser(i)">Modif</button> 
+                    <button (click)="deleteUser(i)">Suppr</button>
+                </td>
             </tr>
         </tbody>
     </table>
+</div>
+
+<hr>
+
+<div class="table-form">
+    <form (ngSubmit)="saveUser()">
+        <input type="text" [(ngModel)]="currentUser.nom" name="nom" placeholder="Nom" required>
+        <input type="text" [(ngModel)]="currentUser.my_email" name="my_email" placeholder="Email" required>
+        <input type="number" [(ngModel)]="currentUser.age" name="age" placeholder="Âge" required>
+        <input type="date" [(ngModel)]="currentUser.date_naiss" name="date_naiss" required>
+        <br>
+        
+        <!-- Sélecteur de profil -->
+        <select [(ngModel)]="currentUser.profile" name="profile" required>
+          <option value="Admin">Admin</option>
+          <option value="User">User</option>
+        </select>
+
+        <br><br>
+      
+        <button type="submit">{{ editingIndex !== null ? 'Modifier utilisateur' : 'Ajouter utilisateur' }}</button>
+      </form>
+
 </div>

@@ -4,9 +4,10 @@ import * as XLSX from 'xlsx';
 
 interface MyUser {
   nom: string;
-  prenom: string;
+  my_email: string;
   age: number;
   date_naiss: string;
+  profile : string;
 }
 
 @Component({
@@ -16,26 +17,67 @@ interface MyUser {
 })
 export class UserTableComponent {
   users: MyUser[] = [
-    { nom: 'Dupont', prenom: 'Jean', age: 28, date_naiss: '1996-05-15' },
-    { nom: 'Durand', prenom: 'Marie', age: 35, date_naiss: '1989-11-20' },
-    { nom: 'Martin', prenom: 'Paul', age: 22, date_naiss: '2002-07-12' },
+    { nom: 'Dupont', my_email: 'Jean.dupont@gmail.com', age: 28, date_naiss: '1996-05-15', profile:'Admin' },
+    { nom: 'Durand', my_email: 'Marie.durand@yahoo.com', age: 35, date_naiss: '1989-11-20', profile:'User'  },
+    { nom: 'Martin', my_email: 'Paul.martin@next.com', age: 22, date_naiss: '2002-07-12', profile:'User'  },
     // Ajoutez plus de données ici
   ];
 
+  currentUser: MyUser = { nom: '', my_email: '', age: 0, date_naiss: '', profile: 'User' };
+  editingIndex: number | null = null;  // Index de l'utilisateur en cours d'édition
+
+    // Fonction pour éditer un utilisateur
+    editUser(index: number) {
+      this.editingIndex = index;
+      this.currentUser = { ...this.users[index] };  // Cloner les données de l'utilisateur sélectionné
+    }
+
+    deleteUser(index: number) {
+      this.users.splice(index, 1); // Supprime l'utilisateur de la liste
+    }
+
+    isEmailUnique(email: string): boolean {
+      return !this.users.some(user => user.my_email === email);
+    }
+
+ // Fonction pour sauvegarder un utilisateur (ajout ou modification)
+ saveUser() {
+
+  if (this.editingIndex === null && !this.isEmailUnique(this.currentUser.my_email)) {
+    alert('Cet email est déjà utilisé !');
+    return;
+  }
+  
+  if (this.editingIndex !== null) {
+    // Mettre à jour l'utilisateur existant
+    this.users[this.editingIndex] = { ...this.currentUser };
+    this.editingIndex = null;
+  } else {
+    // Ajouter un nouvel utilisateur
+    this.users.push({ ...this.currentUser });
+  }
+
+  // Réinitialiser le formulaire
+  this.currentUser = { nom: '', my_email: '', age: 0, date_naiss: '', profile: 'User' };
+}
+
   // Filtres
   nomFilter: string = '';
-  prenomFilter: string = '';
+  my_emailFilter: string = '';
   ageFilter: string = '';
   dateNaissFilter: string = '';
+  profileFilter:string = '';
 
   // Méthode pour filtrer les utilisateurs
   get filteredUsers(): MyUser[] {
     return this.users.filter(user => {
       return (
         (!this.nomFilter || user.nom.toLowerCase().includes(this.nomFilter.toLowerCase())) &&
-        (!this.prenomFilter || user.prenom.toLowerCase().includes(this.prenomFilter.toLowerCase())) &&
+        (!this.my_emailFilter || user.my_email.toLowerCase().includes(this.my_emailFilter.toLowerCase())) &&
         (!this.ageFilter || user.age.toString().includes(this.ageFilter)) &&
         (!this.dateNaissFilter || user.date_naiss.includes(this.dateNaissFilter))
+        &&
+        (!this.profileFilter || user.profile.includes(this.profileFilter))
       );
     });
   }
@@ -48,8 +90,8 @@ export class UserTableComponent {
   }
 
   convertToCSV(data: MyUser[]): string {
-    const header = 'Nom,Prénom,Âge,Date de naissance\n';
-    const rows = data.map(user => `${user.nom},${user.prenom},${user.age},${user.date_naiss}`).join('\n');
+    const header = 'Nom,Email,Âge,Date de naissance,Profile\n';
+    const rows = data.map(user => `${user.nom},${user.my_email},${user.age},${user.date_naiss},${user.profile}`).join('\n');
     return header + rows;
   }
 
@@ -91,13 +133,14 @@ export class UserTableComponent {
 
       // Parcourir chaque ligne du CSV
       for (const line of lines) {
-        const [nom, prenom, age, date_naiss] = line.split(',');
-        if (nom && prenom && age && date_naiss) {
+        const [nom, my_email, age, date_naiss, profile] = line.split(',');
+        if (nom && my_email && age && date_naiss && profile) {
           result.push({
             nom: nom.trim(),
-            prenom: prenom.trim(),
+            my_email: my_email.trim(),
             age: Number(age.trim()),
-            date_naiss: date_naiss.trim()
+            date_naiss: date_naiss.trim(),
+            profile: profile.trim(),
           });
         }
       }
@@ -126,13 +169,14 @@ readExcel(file: File) {
     for (const row of excelData) {
       // Ajout du typage explicite
       if (Array.isArray(row)) {
-        const [nom, prenom, age, date_naiss] = row; // Le typage explicite évite l'erreur TS2488
-        if (nom && prenom && age && date_naiss) {
+        const [nom, my_email, age, date_naiss, profile] = row; // Le typage explicite évite l'erreur TS2488
+        if (nom && my_email && age && date_naiss && profile) {
           result.push({
             nom: nom.trim(),
-            prenom: prenom.trim(),
+            my_email: my_email.trim(),
             age: Number(age),
-            date_naiss: date_naiss.trim()
+            date_naiss: date_naiss.trim(),
+            profile: profile.trim(),
           });
         }
       }
