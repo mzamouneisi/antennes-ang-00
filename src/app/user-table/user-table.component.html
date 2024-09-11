@@ -1,0 +1,41 @@
+<div class="table-container">
+    <div class="button-container">
+        <button (click)="exportAsCSV()">Exporter en CSV</button>
+        <button (click)="exportAsExcel()">Exporter en Excel</button>
+
+        <div class="import-section">
+            <label for="fileInput">Importer fichier CSV ou Excel :</label>
+            <input type="file" (change)="onFileChange($event)" id="fileInput" accept=".csv, .xlsx" />
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Nom<br>
+                    <input type="text" [(ngModel)]="nomFilter" placeholder="Filtrer par nom">
+                </th>
+                <th>
+                    Prénom<br>
+                    <input type="text" [(ngModel)]="prenomFilter" placeholder="Filtrer par prénom">
+                </th>
+                <th>
+                    Âge<br>
+                    <input type="text" [(ngModel)]="ageFilter" placeholder="Filtrer par âge">
+                </th>
+                <th>
+                    Date de naissance<br>
+                    <input type="text" [(ngModel)]="dateNaissFilter" placeholder="Filtrer par date">
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of filteredUsers">
+                <td>{{ user.nom }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.age }}</td>
+                <td>{{ user.date_naiss }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
