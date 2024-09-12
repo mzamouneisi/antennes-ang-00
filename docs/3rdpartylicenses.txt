@@ -10,6 +10,9 @@ MIT
 @angular/platform-browser
 MIT
 
+@angular/router
+MIT
+
 file-saver
 MIT
 The MIT License

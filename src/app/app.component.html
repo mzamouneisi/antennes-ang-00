@@ -1,5 +1,27 @@
-<div class="centered-div">
-  <h1>Bienvenue</h1>
+<div class="centered-div" (click)="router.navigate(['/'])" >
+  POC Excel 
 </div>
 
-<app-user-table></app-user-table>
+<hr>
+
+<nav>
+  <button *ngIf="authService.getCurrentUser(); else loginButton"
+    (click)="showInfosUserConnected = !showInfosUserConnected">
+    {{ authService.getCurrentUser()?.my_email }}
+  </button>
+  <ng-template #loginButton>
+   <!--  <h3>Se Loguer : </h3> -->
+  </ng-template>
+  <div *ngIf="showInfosUserConnected">
+    <div>
+      {{authService.getCurrentUser()?.profile}}
+    </div>
+    <button (click)="logout()">Logout</button>
+  </div>
+</nav>
+
+<br>
+
+
+<!-- Ce router-outlet affichera les composants routés -->
+<router-outlet></router-outlet>

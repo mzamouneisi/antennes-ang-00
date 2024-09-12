@@ -1,14 +1,9 @@
 import { Component } from '@angular/core';
 import { saveAs } from 'file-saver'; // Utilisez file-saver pour télécharger les fichiers
 import * as XLSX from 'xlsx';
-
-interface MyUser {
-  nom: string;
-  my_email: string;
-  age: number;
-  date_naiss: string;
-  profile : string;
-}
+import { AuthService } from '../auth.service';
+import { MyUser } from '../my-user.model';
+import { MyUserService } from '../my-user.service';
 
 @Component({
   selector: 'app-user-table',
@@ -16,15 +11,24 @@ interface MyUser {
   styleUrls: ['./user-table.component.css']
 })
 export class UserTableComponent {
-  users: MyUser[] = [
-    { nom: 'Dupont', my_email: 'Jean.dupont@gmail.com', age: 28, date_naiss: '1996-05-15', profile:'Admin' },
-    { nom: 'Durand', my_email: 'Marie.durand@yahoo.com', age: 35, date_naiss: '1989-11-20', profile:'User'  },
-    { nom: 'Martin', my_email: 'Paul.martin@next.com', age: 22, date_naiss: '2002-07-12', profile:'User'  },
-    // Ajoutez plus de données ici
-  ];
+  users: MyUser[] = [];
 
-  currentUser: MyUser = { nom: '', my_email: '', age: 0, date_naiss: '', profile: 'User' };
+  constructor(private userService: MyUserService, public authService: AuthService) { }
+
+  currentUser: MyUser = { nom: '', my_email: '', password:'', age: 0, date_naiss: '', profile: 'User' };
   editingIndex: number | null = null;  // Index de l'utilisateur en cours d'édition
+
+  ngOnInit() {
+    this.users = this.userService.getUsers(); // Récupérer la liste des utilisateurs
+  }
+
+  showActions(): boolean {
+    const user: MyUser | null = this.authService.getCurrentUser(); // Préciser que `user` peut être null
+    if (user && user.profile === "Admin") {
+      return true;
+    }
+    return false;
+  }
 
     // Fonction pour éditer un utilisateur
     editUser(index: number) {
@@ -58,12 +62,13 @@ export class UserTableComponent {
   }
 
   // Réinitialiser le formulaire
-  this.currentUser = { nom: '', my_email: '', age: 0, date_naiss: '', profile: 'User' };
+  this.currentUser = { nom: '', my_email: '', password:'', age: 0, date_naiss: '', profile: 'User' };
 }
 
   // Filtres
   nomFilter: string = '';
   my_emailFilter: string = '';
+  passwordFilter: string = '';
   ageFilter: string = '';
   dateNaissFilter: string = '';
   profileFilter:string = '';
@@ -74,6 +79,7 @@ export class UserTableComponent {
       return (
         (!this.nomFilter || user.nom.toLowerCase().includes(this.nomFilter.toLowerCase())) &&
         (!this.my_emailFilter || user.my_email.toLowerCase().includes(this.my_emailFilter.toLowerCase())) &&
+        (!this.passwordFilter || user.password.toLowerCase().includes(this.passwordFilter.toLowerCase())) &&
         (!this.ageFilter || user.age.toString().includes(this.ageFilter)) &&
         (!this.dateNaissFilter || user.date_naiss.includes(this.dateNaissFilter))
         &&
@@ -90,8 +96,8 @@ export class UserTableComponent {
   }
 
   convertToCSV(data: MyUser[]): string {
-    const header = 'Nom,Email,Âge,Date de naissance,Profile\n';
-    const rows = data.map(user => `${user.nom},${user.my_email},${user.age},${user.date_naiss},${user.profile}`).join('\n');
+    const header = 'Nom,Email,Password,Âge,Date de naissance,Profile\n';
+    const rows = data.map(user => `${user.nom},${user.my_email},${user.password},${user.age},${user.date_naiss},${user.profile}`).join('\n');
     return header + rows;
   }
 
@@ -133,11 +139,12 @@ export class UserTableComponent {
 
       // Parcourir chaque ligne du CSV
       for (const line of lines) {
-        const [nom, my_email, age, date_naiss, profile] = line.split(',');
-        if (nom && my_email && age && date_naiss && profile) {
+        const [nom, my_email, password, age, date_naiss, profile] = line.split(',');
+        if (nom && my_email && password && age && date_naiss && profile) {
           result.push({
             nom: nom.trim(),
             my_email: my_email.trim(),
+            password: password.trim(),
             age: Number(age.trim()),
             date_naiss: date_naiss.trim(),
             profile: profile.trim(),
@@ -169,11 +176,12 @@ readExcel(file: File) {
     for (const row of excelData) {
       // Ajout du typage explicite
       if (Array.isArray(row)) {
-        const [nom, my_email, age, date_naiss, profile] = row; // Le typage explicite évite l'erreur TS2488
-        if (nom && my_email && age && date_naiss && profile) {
+        const [nom, my_email, password, age, date_naiss, profile] = row; // Le typage explicite évite l'erreur TS2488
+        if (nom && my_email && password && age && date_naiss && profile) {
           result.push({
             nom: nom.trim(),
             my_email: my_email.trim(),
+            password: password.trim(),
             age: Number(age),
             date_naiss: date_naiss.trim(),
             profile: profile.trim(),

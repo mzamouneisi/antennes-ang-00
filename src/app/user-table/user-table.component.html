@@ -20,6 +20,10 @@
                     <input type="text" [(ngModel)]="my_emailFilter" placeholder="Filtrer par email">
                 </th>
                 <th>
+                    Password<br>
+                    <input type="text" [(ngModel)]="passwordFilter" placeholder="Filtrer par password">
+                </th>
+                <th>
                     Âge<br>
                     <input type="text" [(ngModel)]="ageFilter" placeholder="Filtrer par âge">
                 </th>
@@ -31,17 +35,18 @@
                     Profile<br>
                     <input type="text" [(ngModel)]="profileFilter" placeholder="Filtrer par profile">
                 </th>
-                <th>Actions</th>
+                <th *ngIf="showActions()" >Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let user of filteredUsers; let i = index">
                 <td>{{ user.nom }}</td>
                 <td>{{ user.my_email }}</td>
+                <td>{{ user.password }}</td>
                 <td>{{ user.age }}</td>
                 <td>{{ user.date_naiss }}</td>
                 <td>{{ user.profile }}</td>
-                <td>
+                <td *ngIf="showActions()">
                     <button (click)="editUser(i)">Modif</button> 
                     <button (click)="deleteUser(i)">Suppr</button>
                 </td>
@@ -52,10 +57,11 @@
 
 <hr>
 
-<div class="table-form">
+<div class="table-form" *ngIf="showActions()">
     <form (ngSubmit)="saveUser()">
         <input type="text" [(ngModel)]="currentUser.nom" name="nom" placeholder="Nom" required>
-        <input type="text" [(ngModel)]="currentUser.my_email" name="my_email" placeholder="Email" required>
+        <input type="email" [(ngModel)]="currentUser.my_email" name="my_email" placeholder="Email" required>
+        <input type="password" [(ngModel)]="currentUser.password" name="password" placeholder="password" required>
         <input type="number" [(ngModel)]="currentUser.age" name="age" placeholder="Âge" required>
         <input type="date" [(ngModel)]="currentUser.date_naiss" name="date_naiss" required>
         <br>
