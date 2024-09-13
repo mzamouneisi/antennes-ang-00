@@ -15,7 +15,7 @@ export class LoginComponent {
   password: string = 'aa';
   loginError: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router, public shareService : ShareService) {}
+  constructor(public authService: AuthService, private router: Router, public shareService : ShareService) {}
 
   onSubmit() {
     const success = this.authService.login(this.email, this.password);

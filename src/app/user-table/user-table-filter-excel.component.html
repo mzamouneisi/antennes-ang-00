@@ -1,4 +1,4 @@
-<div class="table-container">
+<div class="table-container" *ngIf="authService.isLoggedIn()">
     <div class="button-container">
         <button (click)="exportAsCSV()">Exporter en CSV</button>
         <button (click)="exportAsExcel()">Exporter en Excel</button>

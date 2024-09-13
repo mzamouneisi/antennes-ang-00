@@ -1,4 +1,4 @@
-<div class="table-container">
+<div class="table-container" *ngIf="authService.isLoggedIn()">
     <div class="button-container">
         <button (click)="exportAsCSV()">Exporter en CSV</button>
         <button (click)="exportAsExcel()">Exporter en Excel</button>
@@ -57,7 +57,7 @@
 
 <hr>
 
-<div class="table-form" *ngIf="showActions()">
+<div class="table-form" *ngIf="authService.isLoggedIn() && showActions()">
     <form (ngSubmit)="saveUser()">
         <input type="text" [(ngModel)]="currentUser.nom" name="nom" placeholder="Nom" required>
         <input type="email" [(ngModel)]="currentUser.my_email" name="my_email" placeholder="Email" required>

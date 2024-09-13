@@ -11,18 +11,23 @@
   </button>
   <ng-template #loginButton>
    <!--  <h3>Se Loguer : </h3> -->
+   <!-- <a routerLink="/">Se loguer</a> -->
   </ng-template>
-  <div *ngIf="showInfosUserConnected">
+  <div *ngIf="showInfosUserConnected" class="infos_login">
     <div>
-      {{authService.getCurrentUser()?.profile}}
+      <h3>
+        {{authService.getCurrentUser()?.nom}} : 
+        {{authService.getCurrentUser()?.profile}}
+      </h3>
     </div>
+    <hr>
     <button (click)="logout()">Logout</button>
   </div>
 </nav>
 
 <br>
 
-<div class="centered-div" *ngIf="shareService.showMenusTables">
+<div class="centered-div" *ngIf="authService.isLoggedIn()">
   <button  (click)="router.navigate(['/users'])" >
     Users
   </button>

@@ -1,6 +1,7 @@
 
 
-<div *ngIf="!shareService.showMenusTables" >
+<div *ngIf="!authService.isLoggedIn()" >
+    <h3>Login : </h3>
     <form (ngSubmit)="onSubmit()">
         <div>
           <label for="email">Email:</label>

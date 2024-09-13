@@ -68,6 +68,7 @@ button {
     border-radius: 20px; /* Arrondi des boutons */
     cursor: pointer;
     transition: background-color 0.3s;
+    margin : 2px;
 }
 
 /* Effet au survol des boutons */
@@ -98,4 +99,17 @@ input[type="text"] {
     table thead th, table tbody td {
         padding: 8px 10px;
     }
+}
+
+
+.infos_login {
+    position: absolute;
+    top: 120px;   /* Distance depuis le haut de son parent */
+    left: 10px;   /* Distance depuis la gauche de son parent */
+    width: 200px;
+    height: 100px;
+    background-color: #4CAF50; /* Couleur de fond pour la rendre visible */
+    border-radius: 10px;
+    color: white;
+    padding: 10px;
 }
