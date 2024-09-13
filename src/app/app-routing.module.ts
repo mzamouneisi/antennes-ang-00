@@ -6,7 +6,8 @@ import { UserTableComponent } from './user-table/user-table.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent }, // Définir la route vers le composant de connexion
-  { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirection par défaut vers login
+  { path: '', component: LoginComponent }, // Définir la route vers le composant de connexion
+  // { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirection par défaut vers login
     { path: 'users', component: UserTableComponent },
     { path: 'usersFilterExcel', component: UserTableFilterExcelComponent },
 ];
