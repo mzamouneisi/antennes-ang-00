@@ -22,6 +22,15 @@
 
 <br>
 
+<div class="centered-div" *ngIf="shareService.showMenusTables">
+  <button  (click)="router.navigate(['/users'])" >
+    Users
+  </button>
+  <button  (click)="router.navigate(['/usersFilterExcel'])" >
+    Users Filter Excel 
+  </button>
+</div>
+
 
 <!-- Ce router-outlet affichera les composants routés -->
 <router-outlet></router-outlet>

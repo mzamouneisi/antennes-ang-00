@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { ShareService } from '../share-service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent {
   password: string = 'aa';
   loginError: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, public shareService : ShareService) {}
 
   onSubmit() {
     const success = this.authService.login(this.email, this.password);
@@ -22,9 +23,11 @@ export class LoginComponent {
       // alert('Connexion réussie');
       this.loginError = false;
       // Redirection ou autre action après la connexion réussie
-      this.router.navigate(['/users']);
+      // this.router.navigate(['/users']);
+      this.shareService.showMenusTables = true 
     } else {
       this.loginError = true;
+      this.shareService.showMenusTables = false 
     }
   }
 

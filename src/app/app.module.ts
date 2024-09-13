@@ -6,13 +6,15 @@ import { RouterModule } from '@angular/router'; // Importez RouterModule
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
+import { UserTableFilterExcelComponent } from './user-table/user-table-filter-excel.component';
 import { UserTableComponent } from './user-table/user-table.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UserTableComponent,
-    LoginComponent
+    UserTableFilterExcelComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
