@@ -11,3 +11,91 @@
 .centered-div h1 {
     margin: 0;
 }
+
+/* Conteneur de la table */
+.table-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    overflow-x: auto;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style général de la table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f9f9f9;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+}
+
+/* En-tête de la table */
+table thead th {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 3px solid #ddd;
+}
+
+/* Corps de la table */
+table tbody td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+/* Alternance de couleurs pour les lignes */
+table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Style au survol des lignes */
+table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Boutons d'actions dans la table */
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px; /* Taille ajustée pour plus de confort */
+    border-radius: 20px; /* Arrondi des boutons */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Effet au survol des boutons */
+table tbody td button:hover {
+    background-color: #45a049;
+}
+
+/* Style des inputs de filtrage */
+input[type="text"] {
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .table-container {
+        padding: 10px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    table thead th, table tbody td {
+        padding: 8px 10px;
+    }
+}
