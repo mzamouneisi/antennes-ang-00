@@ -12,10 +12,11 @@ import { MyUserService } from '../my-user.service';
 })
 export class UserTableComponent {
   users: MyUser[] = [];
+  importType: string = 'incremental';
 
   constructor(private userService: MyUserService, public authService: AuthService) { }
 
-  currentUser: MyUser = { nom: '', my_email: '', password:'', age: 0, date_naiss: '', profile: 'User' };
+  currentUser: MyUser = { nom: '', my_email: '', password: '', age: 0, date_naiss: '', profile: 'User' };
   editingIndex: number | null = null;  // Index de l'utilisateur en cours d'édition
 
   ngOnInit() {
@@ -30,40 +31,40 @@ export class UserTableComponent {
     return false;
   }
 
-    // Fonction pour éditer un utilisateur
-    editUser(index: number) {
-      this.editingIndex = index;
-      this.currentUser = { ...this.users[index] };  // Cloner les données de l'utilisateur sélectionné
-    }
-
-    deleteUser(index: number) {
-      this.users.splice(index, 1); // Supprime l'utilisateur de la liste
-    }
-
-    isEmailUnique(email: string): boolean {
-      return !this.users.some(user => user.my_email === email);
-    }
-
- // Fonction pour sauvegarder un utilisateur (ajout ou modification)
- saveUser() {
-
-  if (this.editingIndex === null && !this.isEmailUnique(this.currentUser.my_email)) {
-    alert('Cet email est déjà utilisé !');
-    return;
-  }
-  
-  if (this.editingIndex !== null) {
-    // Mettre à jour l'utilisateur existant
-    this.users[this.editingIndex] = { ...this.currentUser };
-    this.editingIndex = null;
-  } else {
-    // Ajouter un nouvel utilisateur
-    this.users.push({ ...this.currentUser });
+  // Fonction pour éditer un utilisateur
+  editUser(index: number) {
+    this.editingIndex = index;
+    this.currentUser = { ...this.users[index] };  // Cloner les données de l'utilisateur sélectionné
   }
 
-  // Réinitialiser le formulaire
-  this.currentUser = { nom: '', my_email: '', password:'', age: 0, date_naiss: '', profile: 'User' };
-}
+  deleteUser(index: number) {
+    this.users.splice(index, 1); // Supprime l'utilisateur de la liste
+  }
+
+  isEmailUnique(email: string): boolean {
+    return !this.users.some(user => user.my_email === email);
+  }
+
+  // Fonction pour sauvegarder un utilisateur (ajout ou modification)
+  saveUser() {
+
+    if (this.editingIndex === null && !this.isEmailUnique(this.currentUser.my_email)) {
+      alert('Cet email est déjà utilisé !');
+      return;
+    }
+
+    if (this.editingIndex !== null) {
+      // Mettre à jour l'utilisateur existant
+      this.users[this.editingIndex] = { ...this.currentUser };
+      this.editingIndex = null;
+    } else {
+      // Ajouter un nouvel utilisateur
+      this.users.push({ ...this.currentUser });
+    }
+
+    // Réinitialiser le formulaire
+    this.currentUser = { nom: '', my_email: '', password: '', age: 0, date_naiss: '', profile: 'User' };
+  }
 
   // Filtres
   nomFilter: string = '';
@@ -71,7 +72,7 @@ export class UserTableComponent {
   passwordFilter: string = '';
   ageFilter: string = '';
   dateNaissFilter: string = '';
-  profileFilter:string = '';
+  profileFilter: string = '';
 
   // Méthode pour filtrer les utilisateurs
   get filteredUsers(): MyUser[] {
@@ -87,6 +88,17 @@ export class UserTableComponent {
       );
     });
   }
+
+  exportType: string = 'csv'; // Valeur par défaut
+
+  export() {
+    if (this.exportType === 'csv') {
+      this.exportAsCSV();
+    } else if (this.exportType === 'xlsx') {
+      this.exportAsExcel();
+    }
+  }
+
 
   // Exporter les données filtrées en CSV
   exportAsCSV() {
@@ -112,24 +124,24 @@ export class UserTableComponent {
     });
   }
 
-    // Lorsque le fichier change (l'utilisateur sélectionne un fichier)
-    onFileChange(event: any) {
-      const file = event.target.files[0];
-  
-      if (file) {
-        const fileExtension = file.name.split('.').pop().toLowerCase();
-  
-        if (fileExtension === 'csv') {
-          this.readCSV(file);
-        } else if (fileExtension === 'xlsx') {
-          this.readExcel(file);
-        } else {
-          alert('Veuillez sélectionner un fichier CSV ou Excel');
-        }
+  // Lorsque le fichier change (l'utilisateur sélectionne un fichier)
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+
+    if (file) {
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+
+      if (fileExtension === 'csv') {
+        this.readCSV(file);
+      } else if (fileExtension === 'xlsx') {
+        this.readExcel(file);
+      } else {
+        alert('Veuillez sélectionner un fichier CSV ou Excel');
       }
     }
+  }
 
-     // Lire un fichier CSV
+  // Importer un fichier CSV
   readCSV(file: File) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -138,61 +150,94 @@ export class UserTableComponent {
       const result: MyUser[] = [];
 
       // Parcourir chaque ligne du CSV
+      let i=-1
       for (const line of lines) {
+        i++
+        if(i==0) continue
         const [nom, my_email, password, age, date_naiss, profile] = line.split(',');
+
         if (nom && my_email && password && age && date_naiss && profile) {
-          result.push({
+          const newUser: MyUser = {
             nom: nom.trim(),
             my_email: my_email.trim(),
             password: password.trim(),
             age: Number(age.trim()),
             date_naiss: date_naiss.trim(),
             profile: profile.trim(),
-          });
+          };
+
+          // Appeler la méthode correcte selon le type d'import
+          if (this.importType === 'incremental') {
+            this.saveIncremental(newUser);
+          } else {
+            this.saveFull(newUser);
+          }
         }
       }
-
-      this.users = result;
     };
     reader.readAsText(file);
   }
 
-  // Lire un fichier Excel (XLSX)
-readExcel(file: File) {
-  const reader = new FileReader();
-  reader.onload = (e: any) => {
-    const data = new Uint8Array(e.target.result);
-    const workbook = XLSX.read(data, { type: 'array' });
+  // Importer un fichier Excel (XLSX)
+  readExcel(file: File) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
 
-    // Suppose que la première feuille de calcul contient les données
-    const firstSheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[firstSheetName];
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
 
-    // Convertir la feuille en JSON
-    const excelData: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-    const result: MyUser[] = [];
+      const excelData: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      const result: MyUser[] = [];
 
-    // Parcourir chaque ligne des données Excel
-    for (const row of excelData) {
-      // Ajout du typage explicite
-      if (Array.isArray(row)) {
-        const [nom, my_email, password, age, date_naiss, profile] = row; // Le typage explicite évite l'erreur TS2488
+      let i = 0
+      for (const row of excelData) {
+        i++
+        if(i==0) continue
+        const [nom, my_email, password, age, date_naiss, profile] = row;
         if (nom && my_email && password && age && date_naiss && profile) {
-          result.push({
+          const newUser: MyUser = {
             nom: nom.trim(),
             my_email: my_email.trim(),
             password: password.trim(),
             age: Number(age),
             date_naiss: date_naiss.trim(),
             profile: profile.trim(),
-          });
+          };
+
+          if (this.importType === 'incremental') {
+            this.saveIncremental(newUser);
+          } else {
+            this.saveFull(newUser);
+          }
         }
       }
-    }
+    };
+    reader.readAsArrayBuffer(file);
+  }
 
-    this.users = result;
-  };
-  reader.readAsArrayBuffer(file);
-}
+  // Sauvegarde incrémentale : Mise à jour ou ajout de l'utilisateur
+  saveIncremental(newUser: MyUser) {
+    const existingUser = this.users.find(user => user.my_email === newUser.my_email);
+
+    if (existingUser) {
+      // Mettre à jour les autres colonnes si l'email existe
+      existingUser.nom = newUser.nom;
+      existingUser.password = newUser.password;
+      existingUser.age = newUser.age;
+      existingUser.date_naiss = newUser.date_naiss;
+      existingUser.profile = newUser.profile;
+    } else {
+      // Ajouter un nouvel utilisateur si l'email n'existe pas
+      this.users.push(newUser);
+    }
+  }
+
+  // Sauvegarde complète : Ajouter tous les utilisateurs (remplacement complet)
+  saveFull(newUser: MyUser) {
+    this.users.push(newUser); // Ajoute l'utilisateur à la table (remplacement complet)
+  }
+
 
 }

@@ -1,5 +1,5 @@
 <div class="table-container" *ngIf="authService.isLoggedIn()">
-    <div class="button-container">
+    <!-- <div class="button-container">
         <button (click)="exportAsCSV()">Exporter en CSV</button>
         <button (click)="exportAsExcel()">Exporter en Excel</button>
 
@@ -7,7 +7,7 @@
             <label for="fileInput">Importer FULL CSV ou Excel :</label>
             <input type="file" (change)="onFileChange($event)" id="fileInput" accept=".csv, .xlsx" />
         </div>
-    </div>
+    </div> -->
     <table>
         <thead>
             <tr>
@@ -53,7 +53,7 @@
                         <option *ngFor="let profile of profileFilterValues" [value]="profile">{{ profile }}</option>
                     </select>
                 </th>
-                <th *ngIf="showActions()">Actions</th>
+                <!-- <th *ngIf="showActions()">Actions</th> -->
             </tr>
         </thead>
         <tbody>
@@ -64,10 +64,10 @@
                 <td>{{ user.age }}</td>
                 <td>{{ user.date_naiss }}</td>
                 <td>{{ user.profile }}</td>
-                <td *ngIf="showActions()">
+                <!-- <td *ngIf="showActions()">
                     <button (click)="editUser(i)">Modif</button> 
                     <button (click)="deleteUser(i)">Suppr</button>
-                </td>
+                </td> -->
             </tr>
         </tbody>
     </table>

@@ -1,0 +1,35 @@
+TODO :
+======
+
+import file.csv 
+
+    import full : 
+        . save : insert to my_user_save (avec une col date_yyyy_mm_dd_HH_MM_SS_MS)
+        . delete from my_user 
+        . insert into my_user 
+
+    import incremental :
+        . est ce qu'on fait le save ?
+        . si email exist : update cols 
+            sinon : insert 
+
+-----------------
+
+develop the backend 
+    java postgre sur azure ?
+    node js. bdd Mongo, Palteforme Vercel (ou autre gratuite). 
+
+
+=============================================
+DONE
+----
+
+table qui affiche les données de la table MyUser 
+
+faire un filtre sur les cols 
+
+export vers un file.csv 
+
+--------------
+
+
