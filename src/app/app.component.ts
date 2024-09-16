@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
     this.authService.logout();
     this.goToLogin();
     this.showInfosUserConnected = false 
-    this.shareService.showMenusTables=false 
+    // this.shareService.showMenusTables=false 
   }
 
   goToLogin() {

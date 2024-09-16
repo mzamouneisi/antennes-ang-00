@@ -1,32 +1,44 @@
 <div class="table-container" *ngIf="authService.isLoggedIn()">
     <div class="button-container">
         <div class="export-options">
+            <h3>Exporter en format:</h3>
             <label>
                 <input type="radio" name="exportType" [(ngModel)]="exportType" value="csv">
-                Exporter en CSV
+                 CSV
             </label>
             <br>
             <label>
                 <input type="radio" name="exportType" [(ngModel)]="exportType" value="xlsx">
-                Exporter en XLSX
+                XLSX
             </label>
             <br>
 
             <button (click)="export()">Exporter</button>
         </div>
+
+        <div class="card">
+            <div class="card-header">
+              Titre de la section
+            </div>
+            <div class="card-body">
+              <p class="card-text">Ceci est un exemple de contenu à l'intérieur d'une carte.</p>
+            </div>
+          </div>
+          
+
         <br>
 
 
         <div class="import-section">
-
+            <h3>Importer en mode: </h3>
             <div>
                 <label>
-                    Import incrémental
+                    incrémental
                     <input type="radio" name="importType" [(ngModel)]="importType" value="incremental">
                 </label>
                 <br>
                 <label>
-                    Import complet
+                    complet
                     <input type="radio" name="importType" [(ngModel)]="importType" value="full">
                 </label>
             </div>

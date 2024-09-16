@@ -5,6 +5,8 @@ import { AuthService } from '../auth.service';
 import { MyUser } from '../my-user.model';
 import { MyUserService } from '../my-user.service';
 
+const tableHeaders = ['nom', 'my_email', 'password', 'age', 'date_naiss', 'profile'];
+
 @Component({
   selector: 'app-user-table',
   templateUrl: './user-table.component.html',
@@ -16,55 +18,8 @@ export class UserTableComponent {
 
   constructor(private userService: MyUserService, public authService: AuthService) { }
 
-  currentUser: MyUser = { nom: '', my_email: '', password: '', age: 0, date_naiss: '', profile: 'User' };
+  currentUser: MyUser = this.getMyUserInit();
   editingIndex: number | null = null;  // Index de l'utilisateur en cours d'édition
-
-  ngOnInit() {
-    this.users = this.userService.getUsers(); // Récupérer la liste des utilisateurs
-  }
-
-  showActions(): boolean {
-    const user: MyUser | null = this.authService.getCurrentUser(); // Préciser que `user` peut être null
-    if (user && user.profile === "Admin") {
-      return true;
-    }
-    return false;
-  }
-
-  // Fonction pour éditer un utilisateur
-  editUser(index: number) {
-    this.editingIndex = index;
-    this.currentUser = { ...this.users[index] };  // Cloner les données de l'utilisateur sélectionné
-  }
-
-  deleteUser(index: number) {
-    this.users.splice(index, 1); // Supprime l'utilisateur de la liste
-  }
-
-  isEmailUnique(email: string): boolean {
-    return !this.users.some(user => user.my_email === email);
-  }
-
-  // Fonction pour sauvegarder un utilisateur (ajout ou modification)
-  saveUser() {
-
-    if (this.editingIndex === null && !this.isEmailUnique(this.currentUser.my_email)) {
-      alert('Cet email est déjà utilisé !');
-      return;
-    }
-
-    if (this.editingIndex !== null) {
-      // Mettre à jour l'utilisateur existant
-      this.users[this.editingIndex] = { ...this.currentUser };
-      this.editingIndex = null;
-    } else {
-      // Ajouter un nouvel utilisateur
-      this.users.push({ ...this.currentUser });
-    }
-
-    // Réinitialiser le formulaire
-    this.currentUser = { nom: '', my_email: '', password: '', age: 0, date_naiss: '', profile: 'User' };
-  }
 
   // Filtres
   nomFilter: string = '';
@@ -89,6 +44,91 @@ export class UserTableComponent {
     });
   }
 
+  isColIdUnique(email: string): boolean {
+    return !this.users.some(user => user.my_email === email);
+  }
+
+  isColIdUniqueOfCurrentUser(): boolean {
+    return this.isColIdUnique(this.currentUser.my_email);
+  }
+
+  private findById(newUser: MyUser): MyUser | undefined {
+    return this.users.find(user => user.my_email === newUser.my_email);
+  }
+
+  getMyUserInit(): MyUser {
+    return { nom: '', my_email: '', password: '', age: 0, date_naiss: '', profile: 'User' };
+  }
+
+  ///////////////////////////////////////////////////
+
+  ngOnInit() {
+    this.users = this.userService.getUsers(); // Récupérer la liste des utilisateurs
+  }
+
+  showActions(): boolean {
+    const user: MyUser | null = this.authService.getCurrentUser(); // Préciser que `user` peut être null
+    if (user && user.profile === "Admin") {
+      return true;
+    }
+    return false;
+  }
+
+  // Fonction pour éditer un utilisateur
+  editUser(index: number) {
+    this.editingIndex = index;
+    this.currentUser = { ...this.users[index] };  // Cloner les données de l'utilisateur sélectionné
+  }
+
+  deleteUser(index: number) {
+    this.users.splice(index, 1); // Supprime l'utilisateur de la liste
+  }
+
+  // Fonction pour sauvegarder un utilisateur (ajout ou modification)
+  saveUser() {
+
+    if (this.editingIndex === null && !this.isColIdUniqueOfCurrentUser()) {
+      alert('Cet email est déjà utilisé !');
+      return;
+    }
+
+    if (this.editingIndex !== null) {
+      // Mettre à jour l'utilisateur existant
+      this.users[this.editingIndex] = { ...this.currentUser };
+      this.editingIndex = null;
+    } else {
+      // Ajouter un nouvel utilisateur
+      this.users.push({ ...this.currentUser });
+    }
+
+    // Réinitialiser le formulaire
+    this.currentUser = this.getMyUserInit();
+  }
+
+
+
+
+  getCSVHeader() {
+    return tableHeaders.join(',') + '\n';
+  };
+
+  getCSVLine(user: MyUser) {
+    let line = '';
+
+    // Parcourir les headers pour récupérer les propriétés correspondantes de l'utilisateur
+    tableHeaders.forEach((header, index) => {
+      // Si ce n'est pas le premier élément, ajouter une virgule pour séparer les valeurs
+      if (index > 0) {
+        line += ',';
+      }
+
+      // Ajouter la valeur correspondante de l'utilisateur
+      line += user[header as keyof MyUser];  // Utilisation de 'as keyof' pour la sécurité de type
+    });
+
+    return line;
+  };
+
   exportType: string = 'csv'; // Valeur par défaut
 
   export() {
@@ -108,8 +148,8 @@ export class UserTableComponent {
   }
 
   convertToCSV(data: MyUser[]): string {
-    const header = 'Nom,Email,Password,Âge,Date de naissance,Profile\n';
-    const rows = data.map(user => `${user.nom},${user.my_email},${user.password},${user.age},${user.date_naiss},${user.profile}`).join('\n');
+    const header = this.getCSVHeader();
+    const rows = data.map(user => this.getCSVLine(user)).join('\n');
     return header + rows;
   }
 
@@ -140,7 +180,6 @@ export class UserTableComponent {
       }
     }
   }
-
   // Importer un fichier CSV
   readCSV(file: File) {
     const reader = new FileReader();
@@ -149,29 +188,68 @@ export class UserTableComponent {
       const lines = csv.split('\n');
       const result: MyUser[] = [];
 
-      // Parcourir chaque ligne du CSV
-      let i=-1
-      for (const line of lines) {
-        i++
-        if(i==0) continue
-        const [nom, my_email, password, age, date_naiss, profile] = line.split(',');
+      // Ne pas importer la première ligne : extraire les noms de colonnes
+      const headerLine = lines[0];
+      const headers = headerLine.split(',').map((header: string) => header.trim().toLowerCase());
 
-        if (nom && my_email && password && age && date_naiss && profile) {
-          const newUser: MyUser = {
-            nom: nom.trim(),
-            my_email: my_email.trim(),
-            password: password.trim(),
-            age: Number(age.trim()),
-            date_naiss: date_naiss.trim(),
-            profile: profile.trim(),
-          };
+      // Vérifier que les noms de colonnes du fichier correspondent à ceux attendus
+      const expectedHeaders = tableHeaders;
 
-          // Appeler la méthode correcte selon le type d'import
-          if (this.importType === 'incremental') {
-            this.saveIncremental(newUser);
+      // Vérifier la correspondance des colonnes
+      const validFile = expectedHeaders.every(header => headers.includes(header));
+      if (!validFile) {
+        alert('Le fichier CSV ne contient pas les colonnes attendues. Importation annulée.');
+        return;
+      }
+
+      // Trouver les index des colonnes pour gérer l'ordre des colonnes variable
+      // const indexes = {
+      //   nom: headers.indexOf('nom'),
+      //   my_email: headers.indexOf('my_email'),
+      //   password: headers.indexOf('password'),
+      //   age: headers.indexOf('age'),
+      //   date_naiss: headers.indexOf('date_naiss'),
+      //   profile: headers.indexOf('profile'),
+      // };
+
+      const indexes: { [key: string]: number } = {};
+
+      headers.forEach((header: string) => {
+        indexes[header] = headers.indexOf(header)
+      });
+
+      // Parcourir chaque ligne du CSV (sauter la première ligne d'en-tête)
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        const columns = line.split(',');
+
+        // S'assurer que la ligne contient le bon nombre de colonnes
+        if (columns.length < expectedHeaders.length) continue;
+
+        // const newUser: MyUser = {
+        //   nom: columns[indexes.nom].trim(),
+        //   my_email: columns[indexes.my_email].trim(),
+        //   password: columns[indexes.password].trim(),
+        //   age: Number(columns[indexes.age].trim()),
+        //   date_naiss: columns[indexes.date_naiss].trim(),
+        //   profile: columns[indexes.profile].trim(),
+        // };
+
+        const newUser: MyUser = {} as MyUser; // Initialize an empty MyUser object
+
+        headers.forEach((header: keyof MyUser) => {
+          if (header === 'age') {
+            newUser[header] = Number(columns[indexes[header]]?.trim()) || 0;
           } else {
-            this.saveFull(newUser);
+            newUser[header] = columns[indexes[header]]?.trim() || '';
           }
+        });
+
+        // Appeler la méthode correcte selon le type d'import
+        if (this.importType === 'incremental') {
+          this.saveIncremental(newUser);
+        } else {
+          this.saveFull(newUser);
         }
       }
     };
@@ -185,32 +263,81 @@ export class UserTableComponent {
       const data = new Uint8Array(e.target.result);
       const workbook = XLSX.read(data, { type: 'array' });
 
+      // Sélectionner la première feuille de calcul
       const firstSheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[firstSheetName];
 
+      // Convertir la feuille en JSON, avec la première ligne en en-têtes (header: 1)
       const excelData: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-      const result: MyUser[] = [];
 
-      let i = 0
-      for (const row of excelData) {
-        i++
-        if(i==0) continue
-        const [nom, my_email, password, age, date_naiss, profile] = row;
-        if (nom && my_email && password && age && date_naiss && profile) {
-          const newUser: MyUser = {
-            nom: nom.trim(),
-            my_email: my_email.trim(),
-            password: password.trim(),
-            age: Number(age),
-            date_naiss: date_naiss.trim(),
-            profile: profile.trim(),
-          };
+      // Vérifier si les colonnes correspondent à celles attendues
+      const expectedHeaders = tableHeaders;
 
-          if (this.importType === 'incremental') {
-            this.saveIncremental(newUser);
-          } else {
-            this.saveFull(newUser);
+      // La première ligne du fichier Excel contient les noms de colonnes
+      const headers = excelData[0].map((header: string) => header.trim().toLowerCase());
+
+      // Vérifier la correspondance des colonnes
+      const validFile = expectedHeaders.every(header => headers.includes(header));
+      if (!validFile) {
+        alert('Le fichier Excel ne contient pas les colonnes attendues. Importation annulée.');
+        return;
+      }
+
+      // Obtenir les index des colonnes pour s'adapter à un ordre variable des colonnes
+      // const indexes = {
+      //   nom: headers.indexOf('nom'),
+      //   my_email: headers.indexOf('my_email'),
+      //   password: headers.indexOf('password'),
+      //   age: headers.indexOf('age'),
+      //   date_naiss: headers.indexOf('date_naiss'),
+      //   profile: headers.indexOf('profile'),
+      // };
+
+      const indexes: { [key: string]: number } = {};
+
+      headers.forEach((header: string) => {
+        indexes[header] = headers.indexOf(header)
+      });
+
+      // Parcourir chaque ligne des données Excel (en commençant après les en-têtes)
+      for (let i = 1; i < excelData.length; i++) {
+        const row = excelData[i];
+
+        // Assurer que la ligne contient suffisamment de colonnes
+        if (row.length < expectedHeaders.length) continue;
+
+        // const newUser: MyUser = {
+        //   nom: row[indexes.nom]?.trim(),
+        //   my_email: row[indexes.my_email]?.trim(),
+        //   password: row[indexes.password]?.trim(),
+        //   age: Number(row[indexes.age]),
+        //   date_naiss: row[indexes.date_naiss]?.trim(),
+        //   profile: row[indexes.profile]?.trim(),
+        // };
+
+        const newUser: MyUser = {} as MyUser; // Initialize an empty MyUser object
+
+        headers.forEach((header: string) => {
+
+          if (header in newUser) {
+            const key = header as keyof MyUser
+            const value = row[indexes[key]]?.trim();
+
+            if (key === 'age') {
+              newUser[key] = Number(value) || 0;
+            } else if (typeof newUser[key] === 'string') {
+              newUser[key] = value || '';
+            }
           }
+
+        });
+
+
+        // Appeler la méthode correcte selon le type d'import
+        if (this.importType === 'incremental') {
+          this.saveIncremental(newUser);
+        } else {
+          this.saveFull(newUser);
         }
       }
     };
@@ -219,15 +346,22 @@ export class UserTableComponent {
 
   // Sauvegarde incrémentale : Mise à jour ou ajout de l'utilisateur
   saveIncremental(newUser: MyUser) {
-    const existingUser = this.users.find(user => user.my_email === newUser.my_email);
+    const existingUser = this.findById(newUser);
 
     if (existingUser) {
       // Mettre à jour les autres colonnes si l'email existe
-      existingUser.nom = newUser.nom;
-      existingUser.password = newUser.password;
-      existingUser.age = newUser.age;
-      existingUser.date_naiss = newUser.date_naiss;
-      existingUser.profile = newUser.profile;
+      // existingUser.nom = newUser.nom;
+      // existingUser.password = newUser.password;
+      // existingUser.age = newUser.age;
+      // existingUser.date_naiss = newUser.date_naiss;
+      // existingUser.profile = newUser.profile;
+
+      tableHeaders.forEach((header: string) => {
+        const key = header as keyof MyUser
+        // Ici, nous devons faire une conversion explicite des types pour dire à TypeScript que
+        // nous savons que les valeurs sont compatibles.
+        (existingUser[key] as any) = newUser[key];
+      });
     } else {
       // Ajouter un nouvel utilisateur si l'email n'existe pas
       this.users.push(newUser);

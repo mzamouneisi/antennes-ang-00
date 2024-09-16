@@ -3,15 +3,27 @@ TODO :
 
 import file.csv 
 
+    mettre tout ce qui concerne les cols de la table en haut
+
+    refaire l'import en tenant compte des noms de colonnes du fichier import et l'ordre des noms de colonnes de la table 
+
+    add methode : taguer lignes inexistentes dans file import 
+
     import full : 
         . save : insert to my_user_save (avec une col date_yyyy_mm_dd_HH_MM_SS_MS)
         . delete from my_user 
         . insert into my_user 
 
     import incremental :
-        . est ce qu'on fait le save ?
+        . save : insert to my_user_save (avec une col date_yyyy_mm_dd_HH_MM_SS_MS)
         . si email exist : update cols 
             sinon : insert 
+
+
+ecran table_save :
+    recherche multi-cols 
+    restore line 
+
 
 -----------------
 
