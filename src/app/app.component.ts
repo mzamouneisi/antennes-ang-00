@@ -5,7 +5,8 @@ import { ShareService } from './share-service';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
   showInfosUserConnected = false 
@@ -35,5 +36,13 @@ export class AppComponent implements OnInit {
 
   goToLogin() {
     this.router.navigate(['/login']); // Redirige vers le composant de login
+  }
+
+  btn_users_clicked() {
+    this.router.navigate(['/users'])
+  }
+
+  btn_users_filter_excel_clicked() {
+    this.router.navigate(['/usersFilterExcel'])
   }
 }

@@ -1,6 +1,6 @@
 
 
-<div *ngIf="!authService.isLoggedIn()" >
+<div *ngIf="!authService.isLoggedIn()" class="login" >
     <h3>Login : </h3>
     <form (ngSubmit)="onSubmit()">
         <div>

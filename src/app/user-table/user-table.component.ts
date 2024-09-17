@@ -29,6 +29,9 @@ export class UserTableComponent {
   dateNaissFilter: string = '';
   profileFilter: string = '';
 
+  showPanelExport=false 
+  showPanelImport=false
+
   // Méthode pour filtrer les utilisateurs
   get filteredUsers(): MyUser[] {
     return this.users.filter(user => {

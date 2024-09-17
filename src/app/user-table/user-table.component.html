@@ -1,10 +1,13 @@
-<div class="table-container" *ngIf="authService.isLoggedIn()">
-    <div class="button-container">
-        <div class="export-options">
-            <h3>Exporter en format:</h3>
+<div *ngIf="authService.isLoggedIn()">
+    <div class="button_container">
+        <button (click)="showPanelExport = !showPanelExport" class="button_export" >
+            Exporter
+        </button>
+        <div class="panel_flotant export_positions" *ngIf="showPanelExport" >
+           <!--  <h3>Exporter en format:</h3> -->
             <label>
                 <input type="radio" name="exportType" [(ngModel)]="exportType" value="csv">
-                 CSV
+                CSV
             </label>
             <br>
             <label>
@@ -16,21 +19,14 @@
             <button (click)="export()">Exporter</button>
         </div>
 
-        <div class="card">
-            <div class="card-header">
-              Titre de la section
-            </div>
-            <div class="card-body">
-              <p class="card-text">Ceci est un exemple de contenu à l'intérieur d'une carte.</p>
-            </div>
-          </div>
-          
+        <!-- <br> -->
 
-        <br>
+        <button (click)="showPanelImport = !showPanelImport">
+            Importer
+        </button>
 
-
-        <div class="import-section">
-            <h3>Importer en mode: </h3>
+        <div class="panel_flotant import_positions" *ngIf="showPanelImport">
+            <!-- <h3>Importer en mode: </h3> -->
             <div>
                 <label>
                     incrémental
@@ -52,8 +48,9 @@
             </div>
 
         </div>
+
     </div>
-    <table>
+    <table class="table-container">
         <thead>
             <tr>
                 <th>
@@ -83,7 +80,7 @@
                 <th *ngIf="showActions()">Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="tbody-container">
             <tr *ngFor="let user of filteredUsers; let i = index">
                 <td>{{ user.nom }}</td>
                 <td>{{ user.my_email }}</td>

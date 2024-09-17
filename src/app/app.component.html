@@ -1,10 +1,5 @@
 <div class="centered-div"  >
-  <button (click)="router.navigate(['/'])">Dashbord</button>
-</div>
-
-<hr>
-
-<nav>
+  <button (click)="router.navigate(['/'])">Acceuil</button>
   <button *ngIf="authService.getCurrentUser(); else loginButton"
     (click)="showInfosUserConnected = !showInfosUserConnected">
     {{ authService.getCurrentUser()?.my_email }}
@@ -13,6 +8,11 @@
    <!--  <h3>Se Loguer : </h3> -->
    <!-- <a routerLink="/">Se loguer</a> -->
   </ng-template>
+</div>
+
+<hr>
+
+<nav>
   <div *ngIf="showInfosUserConnected" class="infos_login">
     <div>
       <h3>
@@ -28,10 +28,10 @@
 <br>
 
 <div class="centered-div" *ngIf="authService.isLoggedIn()">
-  <button  (click)="router.navigate(['/users'])" >
+  <button  (click)="btn_users_clicked()" class="btn_users" >
     Users
   </button>
-  <button  (click)="router.navigate(['/usersFilterExcel'])" >
+  <button  (click)="btn_users_filter_excel_clicked()" class="btn_users_filter_excel" >
     Users Filter Excel 
   </button>
 </div>
