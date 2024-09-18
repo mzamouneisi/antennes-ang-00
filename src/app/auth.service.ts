@@ -10,7 +10,7 @@ const keyAuthToken = 'authToken'
 })
 export class AuthService {
 
-  private currentUser: MyUser | null = null; // Stocke l'utilisateur connecté
+  private userConnected: MyUser | null = null; // Stocke l'utilisateur connecté
 
   constructor(private userService: MyUserService, private cookieService: CookieService) { }
 
@@ -19,7 +19,7 @@ export class AuthService {
     const user: MyUser | undefined = this.userService.getUserByEmail(email);
     if (user && user.password === password) {
       // Connexion réussie
-      this.currentUser = user;
+      this.userConnected = user;
       this.cookieService.set(keyAuthToken, user.my_email, 30); // Stocker le token pendant 30 jour
       return true;
     }
@@ -27,7 +27,7 @@ export class AuthService {
   }
 
   logout() {
-    this.currentUser = null;
+    this.userConnected = null;
     this.cookieService.delete(keyAuthToken); // Supprimer le cookie à la déconnexion
   }
 
@@ -35,12 +35,19 @@ export class AuthService {
     return !!this.cookieService.get(keyAuthToken);
   }
 
-  getCurrentUser(): MyUser | null {
-    const email = this.cookieService.get(keyAuthToken);
-    const u = this.userService.getUserByEmail(email)
-    this.currentUser = u ? u : null;
+  getUserConnected(): MyUser | null {
+    if(!this.userConnected) {
 
-    return this.currentUser;
+      // console.log("getUserConnected")
+      const email = this.cookieService.get(keyAuthToken);
+      // console.log("getUserConnected : email ", email)
+      const u = this.userService.getUserByEmail(email)
+      //  console.log("getUserConnected : u ", u)
+      this.userConnected = u ? u : null;
+      console.log("getUserConnected : userConnected ", this.userConnected)
+    }
+
+    return this.userConnected;
   }
 
 }

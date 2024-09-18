@@ -2,9 +2,9 @@
   <div class="left">
     <button (click)="router.navigate(['/'])">Acceuil</button>
 
-    <button *ngIf="authService.getCurrentUser(); else loginButton"
+    <button *ngIf="userConnected; else loginButton"
       (click)="showInfosUserConnected = !showInfosUserConnected">
-      {{ authService.getCurrentUser()?.my_email }}
+      {{ userConnected?.my_email }}
     </button>
     <ng-template #loginButton>
      <!--  <h3>Se Loguer : </h3> -->
@@ -28,8 +28,8 @@
   <div *ngIf="showInfosUserConnected" class="infos_login">
     <div>
       <h3>
-        {{authService.getCurrentUser()?.nom}} : 
-        {{authService.getCurrentUser()?.profile}}
+        {{userConnected?.nom}} : 
+        {{userConnected?.profile}}
       </h3>
     </div>
     <hr>

@@ -34,7 +34,7 @@ export class UserTableFilterExcelComponent {
   editingIndex: number | null = null;
 
   showActions(): boolean {
-    const user: MyUser | null = this.authService.getCurrentUser(); // Préciser que `user` peut être null
+    const user: MyUser | null = this.authService.getUserConnected(); // Préciser que `user` peut être null
     if (user && user.profile === "Admin") {
       return true;
     }

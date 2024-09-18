@@ -10,20 +10,21 @@ import { ShareService } from './share-service';
 })
 export class AppComponent implements OnInit {
   showInfosUserConnected = false 
+  userConnected = this.authService.getUserConnected()
 
   constructor(public router: Router, public authService: AuthService, public shareService : ShareService) {}
 
   ngOnInit(): void {
-
+    this.userConnected = this.authService.getUserConnected()
   }
 
   getButtonText(): string {
-    const currentUser = this.authService.getCurrentUser();
+    const currentUser = this.userConnected;
     return currentUser ? currentUser.my_email : 'Se loguer';
   }
 
   getProfile(): string {
-    const currentUser = this.authService.getCurrentUser();
+    const currentUser = this.userConnected;
     return currentUser ? currentUser.profile : '';
   }
 

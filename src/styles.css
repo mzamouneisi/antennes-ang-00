@@ -1,6 +1,6 @@
 /* Boutons d'actions dans la table */
 button {
-    background-color: #4CAF50;
+    background-color: rgb(76, 133, 160);
     color: white;
     border: none;
     padding: 8px 16px;
@@ -35,7 +35,7 @@ table {
 
 /* Style pour l'en-tête de la table */
 table thead {
-    background-color: #4CAF50;
+    background-color: rgb(76, 133, 160);
     color: white;
     position: sticky;
     /* Garder l'en-tête en place */
@@ -120,7 +120,7 @@ table tbody tr:hover {
     display: flex;
     background-color: #f0f0f0;
     overflow: hidden; /* Pour forcer le conteneur à contenir les flottants */
-    background-color: lightgreen;
+    background-color: lightblue;
 }
 
 .panel_menu h1 {

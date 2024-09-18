@@ -99,7 +99,7 @@
 
 <hr>
 
-<div class="table-form" *ngIf="authService.isLoggedIn() && showActions() && isShowForm ">
+<div class="table-form" *ngIf="authService.isLoggedIn() && showActions() && showFormEdit() ">
     <div class="form-entete">
         <div class="right">
             <button (click)="closeFormEdit()" >X</button>

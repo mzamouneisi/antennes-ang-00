@@ -18,6 +18,42 @@ export class MyUserService {
 
   // Fonction pour obtenir un utilisateur par email
   getUserByEmail(email: string): MyUser | undefined {
-    return this.users.find(user => user.my_email === email);
+    // return this.users.find(user => user.my_email === email);
+    // console.log("getUserByEmail email", email )
+    let user : MyUser | undefined
+    for (let index = 0; index < this.users.length; index++) {
+      const u : MyUser = this.users[index];
+
+      if(u.my_email == email) {
+        user = u 
+        break 
+      }
+    }
+    return user 
+  }
+
+  getIndexUserByEmail(email: string): number {
+    // return this.users.find(user => user.my_email === email);
+    // console.log("getUserByEmail email", email )
+    let user : MyUser | undefined
+    let i = -1
+    for (let index = 0; index < this.users.length; index++) {
+      const u : MyUser = this.users[index];
+
+      if(u.my_email == email) {
+        user = u 
+        i = index 
+        break 
+      }
+    }
+    return i 
+  }
+
+  deleteUserByEmail(email: string) {
+     let user : MyUser | undefined = this.getUserByEmail(email);
+     if(user) {
+      const i  = this.getIndexUserByEmail(email)
+      this.users.splice(i, 1); // Supprime l'utilisateur de la liste
+     }
   }
 }

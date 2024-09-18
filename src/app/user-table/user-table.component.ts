@@ -15,12 +15,15 @@ const tableHeaders = ['nom', 'my_email', 'password', 'age', 'date_naiss', 'profi
 export class UserTableComponent {
   users: MyUser[] = [];
   importType: string = 'incremental';
+  userConnected = this.authService.getUserConnected()
 
-  constructor(private userService: MyUserService, public authService: AuthService) { }
+  constructor(private userService: MyUserService, public authService: AuthService) {
+    this.userConnected = this.authService.getUserConnected()
+  }
 
   currentUser: MyUser = this.getMyUserInit();
   editingIndex: number | null = null;  // Index de l'utilisateur en cours d'édition
-  isShowForm = false 
+  isShowForm = false
 
   // Filtres
   nomFilter: string = '';
@@ -30,8 +33,8 @@ export class UserTableComponent {
   dateNaissFilter: string = '';
   profileFilter: string = '';
 
-  showPanelExport=false 
-  showPanelImport=false
+  showPanelExport = false
+  showPanelImport = false
 
   // Méthode pour filtrer les utilisateurs
   get filteredUsers(): MyUser[] {
@@ -71,26 +74,47 @@ export class UserTableComponent {
   }
 
   showActions(): boolean {
-    const user: MyUser | null = this.authService.getCurrentUser(); // Préciser que `user` peut être null
+    const user: MyUser | null = this.authService.getUserConnected(); // Préciser que `user` peut être null
     if (user && user.profile === "Admin") {
       return true;
     }
     return false;
   }
 
+  showFormEdit() {
+    return this.isShowForm || (this.users && this.users.length == 0)
+  }
+
   closeFormEdit() {
-    this.isShowForm = false 
+    this.isShowForm = false
   }
 
   // Fonction pour éditer un utilisateur
   editUser(index: number) {
-    this.isShowForm = true 
+    this.isShowForm = true
     this.editingIndex = index;
-    this.currentUser = { ...this.users[index] };  // Cloner les données de l'utilisateur sélectionné
+    this.currentUser = { ...this.filteredUsers[index] };  // Cloner les données de l'utilisateur sélectionné
   }
 
   deleteUser(index: number) {
-    this.users.splice(index, 1); // Supprime l'utilisateur de la liste
+    // console.log("deleteUser : userConnected : ", this.userConnected)
+    const my_email = this.userConnected?.my_email
+    const currentUser = this.filteredUsers[index]
+    // console.log("deleteUser : my_email : ", my_email)
+    // console.log("index, currentUser.my_email : ", index, currentUser.my_email)
+
+    if (!currentUser.my_email ) {
+      alert("currentUser.my_email is null !")
+      return
+    }
+
+    if (currentUser.my_email == my_email) {
+      alert("On ne peut pas supprimer le user connected !")
+      return
+    }
+
+    this.userService.deleteUserByEmail(currentUser.my_email)
+
   }
 
   // Fonction pour sauvegarder un utilisateur (ajout ou modification)
@@ -103,7 +127,7 @@ export class UserTableComponent {
 
     if (this.editingIndex !== null) {
       // Mettre à jour l'utilisateur existant
-      this.users[this.editingIndex] = { ...this.currentUser };
+      this.filteredUsers[this.editingIndex] = { ...this.currentUser };
       this.editingIndex = null;
     } else {
       // Ajouter un nouvel utilisateur
