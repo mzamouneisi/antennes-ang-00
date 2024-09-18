@@ -20,6 +20,7 @@ export class UserTableComponent {
 
   currentUser: MyUser = this.getMyUserInit();
   editingIndex: number | null = null;  // Index de l'utilisateur en cours d'édition
+  isShowForm = false 
 
   // Filtres
   nomFilter: string = '';
@@ -77,8 +78,13 @@ export class UserTableComponent {
     return false;
   }
 
+  closeFormEdit() {
+    this.isShowForm = false 
+  }
+
   // Fonction pour éditer un utilisateur
   editUser(index: number) {
+    this.isShowForm = true 
     this.editingIndex = index;
     this.currentUser = { ...this.users[index] };  // Cloner les données de l'utilisateur sélectionné
   }
@@ -205,16 +211,6 @@ export class UserTableComponent {
         return;
       }
 
-      // Trouver les index des colonnes pour gérer l'ordre des colonnes variable
-      // const indexes = {
-      //   nom: headers.indexOf('nom'),
-      //   my_email: headers.indexOf('my_email'),
-      //   password: headers.indexOf('password'),
-      //   age: headers.indexOf('age'),
-      //   date_naiss: headers.indexOf('date_naiss'),
-      //   profile: headers.indexOf('profile'),
-      // };
-
       const indexes: { [key: string]: number } = {};
 
       headers.forEach((header: string) => {
@@ -228,15 +224,6 @@ export class UserTableComponent {
 
         // S'assurer que la ligne contient le bon nombre de colonnes
         if (columns.length < expectedHeaders.length) continue;
-
-        // const newUser: MyUser = {
-        //   nom: columns[indexes.nom].trim(),
-        //   my_email: columns[indexes.my_email].trim(),
-        //   password: columns[indexes.password].trim(),
-        //   age: Number(columns[indexes.age].trim()),
-        //   date_naiss: columns[indexes.date_naiss].trim(),
-        //   profile: columns[indexes.profile].trim(),
-        // };
 
         const newUser: MyUser = {} as MyUser; // Initialize an empty MyUser object
 
@@ -286,16 +273,6 @@ export class UserTableComponent {
         return;
       }
 
-      // Obtenir les index des colonnes pour s'adapter à un ordre variable des colonnes
-      // const indexes = {
-      //   nom: headers.indexOf('nom'),
-      //   my_email: headers.indexOf('my_email'),
-      //   password: headers.indexOf('password'),
-      //   age: headers.indexOf('age'),
-      //   date_naiss: headers.indexOf('date_naiss'),
-      //   profile: headers.indexOf('profile'),
-      // };
-
       const indexes: { [key: string]: number } = {};
 
       headers.forEach((header: string) => {
@@ -308,15 +285,6 @@ export class UserTableComponent {
 
         // Assurer que la ligne contient suffisamment de colonnes
         if (row.length < expectedHeaders.length) continue;
-
-        // const newUser: MyUser = {
-        //   nom: row[indexes.nom]?.trim(),
-        //   my_email: row[indexes.my_email]?.trim(),
-        //   password: row[indexes.password]?.trim(),
-        //   age: Number(row[indexes.age]),
-        //   date_naiss: row[indexes.date_naiss]?.trim(),
-        //   profile: row[indexes.profile]?.trim(),
-        // };
 
         const newUser: MyUser = {} as MyUser; // Initialize an empty MyUser object
 
@@ -352,12 +320,6 @@ export class UserTableComponent {
     const existingUser = this.findById(newUser);
 
     if (existingUser) {
-      // Mettre à jour les autres colonnes si l'email existe
-      // existingUser.nom = newUser.nom;
-      // existingUser.password = newUser.password;
-      // existingUser.age = newUser.age;
-      // existingUser.date_naiss = newUser.date_naiss;
-      // existingUser.profile = newUser.profile;
 
       tableHeaders.forEach((header: string) => {
         const key = header as keyof MyUser

@@ -1,13 +1,25 @@
-<div class="centered-div"  >
-  <button (click)="router.navigate(['/'])">Acceuil</button>
-  <button *ngIf="authService.getCurrentUser(); else loginButton"
-    (click)="showInfosUserConnected = !showInfosUserConnected">
-    {{ authService.getCurrentUser()?.my_email }}
-  </button>
-  <ng-template #loginButton>
-   <!--  <h3>Se Loguer : </h3> -->
-   <!-- <a routerLink="/">Se loguer</a> -->
-  </ng-template>
+<div class="panel_menu"  >
+  <div class="left">
+    <button (click)="router.navigate(['/'])">Acceuil</button>
+
+    <button *ngIf="authService.getCurrentUser(); else loginButton"
+      (click)="showInfosUserConnected = !showInfosUserConnected">
+      {{ authService.getCurrentUser()?.my_email }}
+    </button>
+    <ng-template #loginButton>
+     <!--  <h3>Se Loguer : </h3> -->
+     <!-- <a routerLink="/">Se loguer</a> -->
+    </ng-template>
+  </div>
+
+  <div class="right" *ngIf="authService.isLoggedIn()">
+    <button  (click)="btn_users_clicked()" class="btn_users" >
+      Users
+    </button>
+    <button  (click)="btn_users_filter_excel_clicked()" class="btn_users_filter_excel" >
+      Users Filter Excel 
+    </button>
+  </div>
 </div>
 
 <hr>
@@ -25,16 +37,8 @@
   </div>
 </nav>
 
-<br>
 
-<div class="centered-div" *ngIf="authService.isLoggedIn()">
-  <button  (click)="btn_users_clicked()" class="btn_users" >
-    Users
-  </button>
-  <button  (click)="btn_users_filter_excel_clicked()" class="btn_users_filter_excel" >
-    Users Filter Excel 
-  </button>
-</div>
+
 
 
 <!-- Ce router-outlet affichera les composants routés -->

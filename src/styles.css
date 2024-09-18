@@ -47,10 +47,14 @@ table td {
     padding: 10px;
     text-align: left;
     border: 1px solid #ddd;
-    width: 100px; /* Largeur par défaut pour toutes les colonnes */
-    white-space: normal; /* Permet au texte de sauter à la ligne */
-    word-wrap: break-word; /* Casse les lignes au besoin */
-    word-break: break-word; /* Casse les mots longs si nécessaire */
+    width: 100px;
+    /* Largeur par défaut pour toutes les colonnes */
+    white-space: normal;
+    /* Permet au texte de sauter à la ligne */
+    word-wrap: break-word;
+    /* Casse les lignes au besoin */
+    word-break: break-word;
+    /* Casse les mots longs si nécessaire */
 }
 
 table th {
@@ -85,66 +89,114 @@ table tbody tr:hover {
 
 .panel_flotant {
     position: absolute;
-   /*  top: 20px; */   /* Distance depuis le haut de son parent */
-    /* left: 20px;  */  /* Distance depuis la gauche de son parent */
+    /*  top: 20px; */
+    /* Distance depuis le haut de son parent */
+    /* left: 20px;  */
+    /* Distance depuis la gauche de son parent */
     /* height: 100px; */
     color: black;
-    border: 2px solid black ;
+    border: 2px solid black;
     z-index: 1000;
 
     padding: 20px;
-    width: 300px; /* Largeur du conteneur */
-    background-color: #f9f9f9; /* Fond léger */
-    border-radius: 8px; /* Coins arrondis */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Légère ombre pour l'effet de profondeur */
-    margin: 0 auto; /* Centrer horizontalement */
-    text-align: left; /* Alignement du texte à gauche */
-    
+    width: 300px;
+    /* Largeur du conteneur */
+    background-color: #f9f9f9;
+    /* Fond léger */
+    border-radius: 8px;
+    /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Légère ombre pour l'effet de profondeur */
+    margin: 0 auto;
+    /* Centrer horizontalement */
+    text-align: left;
+    /* Alignement du texte à gauche */
+
+}
+
+.panel_menu {
+    width: 100%;
+    /* height: 50px; */
+    display: flex;
+    background-color: #f0f0f0;
+    overflow: hidden; /* Pour forcer le conteneur à contenir les flottants */
+    background-color: lightgreen;
+}
+
+.panel_menu h1 {
+    margin: 0;
+}
+
+.right {
+    float: right;
+    width: 50%; /* Ajustez la largeur si nécessaire */
+    /* background-color: lightgreen; */
+
+    display: flex;
+    justify-content: flex-end;
+    /* Aligne tous les éléments enfants à droite */
+    gap: 10px;
+    /* Espace entre les éléments */
+    /* border: 2px solid black; */
+}
+
+.left {
+    float: left;
+    width: 50%; /* Ajustez la largeur si nécessaire */
+    /* background-color: lightblue; */
+
+    display: flex;
+    justify-content: flex-start;
+    /* Aligne tous les éléments enfants à droite */
+    gap: 10px;
+    /* Espace entre les éléments */
+    /* border: 2px solid black; */
 }
 
 .login {
     color: black;
-    border: 2px solid black ;
+    border: 2px solid black;
 
     padding: 20px;
-   /*  width: 300px; */ /* Largeur du conteneur */
-    background-color: #f9f9f9; /* Fond léger */
-    border-radius: 8px; /* Coins arrondis */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Légère ombre pour l'effet de profondeur */
-    margin: 0 auto; /* Centrer horizontalement */
-    text-align: left; /* Alignement du texte à gauche */
-    
+    /*  width: 300px; */
+    /* Largeur du conteneur */
+    background-color: #f9f9f9;
+    /* Fond léger */
+    border-radius: 8px;
+    /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Légère ombre pour l'effet de profondeur */
+    margin: 0 auto;
+    /* Centrer horizontalement */
+    text-align: left;
+    /* Alignement du texte à gauche */
+
 }
 
 
 .infos_login {
     position: absolute;
-    top: 50px;   /* Distance depuis le haut de son parent */
-    left: 10px;   /* Distance depuis la gauche de son parent */
+    top: 50px;
+    /* Distance depuis le haut de son parent */
+    left: 10px;
+    /* Distance depuis la gauche de son parent */
     /* height: 100px; */
     color: black;
-    border: 2px solid black ;
+    border: 2px solid black;
     z-index: 1000;
 
     padding: 20px;
-    width: 300px; /* Largeur du conteneur */
-    background-color: #f9f9f9; /* Fond léger */
-    border-radius: 8px; /* Coins arrondis */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Légère ombre pour l'effet de profondeur */
-    margin: 0 auto; /* Centrer horizontalement */
-    text-align: left; /* Alignement du texte à gauche */
-    
-}
+    width: 300px;
+    /* Largeur du conteneur */
+    background-color: #f9f9f9;
+    /* Fond léger */
+    border-radius: 8px;
+    /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Légère ombre pour l'effet de profondeur */
+    margin: 0 auto;
+    /* Centrer horizontalement */
+    text-align: left;
+    /* Alignement du texte à gauche */
 
-.centered-div {
-    width: 100%;
-    height: 50px;
-    display: flex;
-    /* justify-content: center;  *//* Centre horizontalement */
-    align-items: center;     /* Centre verticalement */
-    background-color: #f0f0f0; /* Couleur de fond pour mieux voir */
-}
-
-.centered-div h1 {
-    margin: 0;
 }

@@ -99,7 +99,12 @@
 
 <hr>
 
-<div class="table-form" *ngIf="authService.isLoggedIn() && showActions()">
+<div class="table-form" *ngIf="authService.isLoggedIn() && showActions() && isShowForm ">
+    <div class="form-entete">
+        <div class="right">
+            <button (click)="closeFormEdit()" >X</button>
+        </div>
+    </div>
     <form (ngSubmit)="saveUser()">
         <input type="text" [(ngModel)]="currentUser.nom" name="nom" placeholder="Nom" required>
         <input type="email" [(ngModel)]="currentUser.my_email" name="my_email" placeholder="Email" required>

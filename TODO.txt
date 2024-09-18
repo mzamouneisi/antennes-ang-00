@@ -3,11 +3,7 @@ TODO :
 
 import file.csv 
 
-    mettre tout ce qui concerne les cols de la table en haut
-
-    refaire l'import en tenant compte des noms de colonnes du fichier import et l'ordre des noms de colonnes de la table 
-
-    add methode : taguer lignes inexistentes dans file import 
+    methode : taguer lignes inexistentes dans file import 
 
     import full : 
         . save : insert to my_user_save (avec une col date_yyyy_mm_dd_HH_MM_SS_MS)
@@ -35,6 +31,12 @@ develop the backend
 =============================================
 DONE
 ----
+
+    refaire l'affichage plus correct 
+
+    refaire l'import en tenant compte des noms de colonnes du fichier import et l'ordre des noms de colonnes de la table 
+
+    mettre tout ce qui concerne les cols de la table en haut
 
 table qui affiche les données de la table MyUser 
 
